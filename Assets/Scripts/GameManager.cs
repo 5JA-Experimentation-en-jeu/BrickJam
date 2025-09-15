@@ -4,6 +4,8 @@ using Unity.Netcode;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
+    public GameObject Joueur1;
+    public GameObject Joueur2;
 
     private void Awake()
     {
@@ -14,6 +16,28 @@ public class GameManager : NetworkBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        NetworkManager.Singleton.OnClientConnectedCallback += OnNouveauClientConnecte;
+    }
+
+    private void OnNouveauClientConnecte(ulong clientId)
+    {
+        if (!IsServer) return;
+
+        if (NetworkManager.Singleton.ConnectedClients.Count == 1)
+        {
+            GameObject nouveauJoueur = Instantiate(Joueur1);
+            nouveauJoueur.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+        }
+        else if (NetworkManager.Singleton.ConnectedClients.Count == 2)
+        {
+            GameObject nouveauJoueur = Instantiate(Joueur2);
+            nouveauJoueur.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
         }
     }
 
