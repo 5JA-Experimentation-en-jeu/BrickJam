@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
 
 public class GameManager : NetworkBehaviour
 {
@@ -7,7 +8,7 @@ public class GameManager : NetworkBehaviour
     public GameObject Joueur1;
     public GameObject Joueur2;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {
@@ -29,15 +30,16 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
+
         if (NetworkManager.Singleton.ConnectedClients.Count == 1)
         {
             GameObject nouveauJoueur = Instantiate(Joueur1);
-            nouveauJoueur.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+            nouveauJoueur.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         }
         else if (NetworkManager.Singleton.ConnectedClients.Count == 2)
         {
             GameObject nouveauJoueur = Instantiate(Joueur2);
-            nouveauJoueur.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+            nouveauJoueur.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         }
     }
 

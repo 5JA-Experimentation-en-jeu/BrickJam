@@ -1,18 +1,25 @@
+using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 
 public class Balle : NetworkBehaviour
 {
-    
+    public Camera cameraJoueur;
+    float minX, maxX;
+    bool lancee = false;
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        lancerBalle();
+        if (IsOwner && !lancee)
+        {
+            lancerBalle();
+            lancee = true;
+        }
     }
     
     void lancerBalle()
     {
-        GetComponent<Rigidbody2D>().AddForce(new Vector3(1, 1, 0) * 500);
+        Vector2 direction = new Vector2(Random.Range(-1f, 1f), 1).normalized;
+        GetComponent<Rigidbody2D>().AddForce(direction * 500);
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9005374193661446842}
   - component: {fileID: 8530659551038640781}
   - component: {fileID: 4583017432472618881}
-  - component: {fileID: 5483748514954360012}
+  - component: {fileID: -8932564945227232480}
   m_Layer: 0
   m_Name: Joueur1
   m_TagString: Untagged
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 654885332135190495}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -10, y: -4.5, z: 0}
+  m_LocalScale: {x: 1.5, y: 0.35, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2407612137146877646}
@@ -153,7 +153,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5483748514954360012
+--- !u!114 &-8932564945227232480
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,11 +162,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 654885332135190495}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c521ccd4876a41d89fa4d828cec2eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 07af5a9dd4e734f8eaa9b3967c955034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarreController
   ShowTopMostFoldoutHeaderGroup: 1
+  balle: {fileID: 5079138480060303256, guid: c1a4764607c3f4ac2af39ee65c72281a, type: 3}
   vitesse: 10
+  cameraJoueur: {fileID: 0}
 --- !u!1 &3542683114187780654
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,8 +195,8 @@ Transform:
   m_GameObject: {fileID: 3542683114187780654}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: -4.5, z: 0}
-  m_LocalScale: {x: 1.5, y: 0.35, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7186051543729641954}
