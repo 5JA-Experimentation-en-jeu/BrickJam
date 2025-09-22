@@ -14,6 +14,9 @@ public class ControlerBarre : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        // Abonnement au début de partie
+        GameManager.Instance.OnDebutPartie += SpawnBalle;
+
         if (OwnerClientId == 0)
         {
             cameraJoueur = GameObject.Find("CameraJ1").GetComponent<Camera>();
@@ -28,17 +31,11 @@ public class ControlerBarre : NetworkBehaviour
 
         // Calculer les limites avec la taille de la barre
         float demiLargeurBarre = GetComponent<BoxCollider2D>().size.x * transform.lossyScale.x / 2;
-        limites.CalculerLimites(demiLargeurBarre);
+        float demiHauteurBarre = GetComponent<BoxCollider2D>().size.y * transform.lossyScale.y / 2;
+        limites.CalculerLimites(demiLargeurBarre, demiHauteurBarre);
 
         minX = limites.minX;
         maxX = limites.maxX;
-
-        // Spawner la balle
-        if (IsOwner)
-        {
-            GameObject nouvelleBalle = Instantiate(balle);
-            nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-        }
     }
 
     void Update()
@@ -52,5 +49,21 @@ public class ControlerBarre : NetworkBehaviour
         // Verifier les limites
         nouvellePosition.x = Mathf.Clamp(nouvellePosition.x, minX, maxX);
         transform.position = nouvellePosition;
+    }
+
+    protected new void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnDebutPartie -= SpawnBalle;
+        }
+            
+        base.OnDestroy();
+    }
+
+    void SpawnBalle()
+    {
+        GameObject nouvelleBalle = Instantiate(balle, transform.position + Vector3.up * 1.5f, Quaternion.identity);
+        nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
     }
 }
