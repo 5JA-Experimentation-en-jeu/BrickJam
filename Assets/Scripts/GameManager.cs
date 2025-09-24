@@ -6,11 +6,16 @@ using System;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
+
+    [Header("Prefabs")]
     public GameObject Joueur1;
     public GameObject Joueur2;
     public GameObject balle;
 
     public Action OnDebutPartie;
+
+    // Suivi des joueurs connectés
+    Dictionary<ulong, GameObject> joueursConnectes = new();
 
     void Awake()
     {
@@ -41,7 +46,6 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-
         if (NetworkManager.Singleton.ConnectedClients.Count == 1)
         {
             GameObject nouveauJoueur = Instantiate(Joueur1);
@@ -51,8 +55,33 @@ public class GameManager : NetworkBehaviour
         {
             GameObject nouveauJoueur = Instantiate(Joueur2);
             nouveauJoueur.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+        }
+    }
 
+    public void EnregistrerJoueur(ulong clientId, GameObject joueur)
+    {
+        if (!joueursConnectes.ContainsKey(clientId))
+        {
+            joueursConnectes.Add(clientId, joueur);
+        }
+
+        if (joueursConnectes.Count == 2)
+        {
             DebuterPartie();
+        }
+    }
+
+    void DebuterPartie()
+    {
+        OnDebutPartie?.Invoke();
+
+        foreach (var client in joueursConnectes)
+        {
+            ulong clientId = client.Key;
+
+            Vector3 positionSpawn = client.Value.transform.position + Vector3.up * 8f;
+            GameObject nouvelleBarre = Instantiate(balle, positionSpawn, Quaternion.identity);
+            nouvelleBarre.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         }
     }
 
@@ -65,16 +94,5 @@ public class GameManager : NetworkBehaviour
     public void LancerClient()
     {
         NetworkManager.Singleton.StartClient();
-    }
-
-    void DebuterPartie()
-    {
-        OnDebutPartie?.Invoke();
-    }
-
-    void Update()
-    {
-        if (!IsHost) return;
-
     }
 }

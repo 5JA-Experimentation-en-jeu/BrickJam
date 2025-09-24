@@ -1050,6 +1050,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   Joueur1: {fileID: 654885332135190495, guid: 321a1e36d01aa49e0b5a1cac14430a8c, type: 3}
   Joueur2: {fileID: 654885332135190495, guid: ada8dcc077c694416b762e9c978f0849, type: 3}
+  balle: {fileID: 5079138480060303256, guid: c1a4764607c3f4ac2af39ee65c72281a, type: 3}
 --- !u!1 &990236428
 GameObject:
   m_ObjectHideFlags: 0

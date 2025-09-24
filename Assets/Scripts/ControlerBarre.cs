@@ -5,17 +5,27 @@ using UnityEngine;
 public class ControlerBarre : NetworkBehaviour
 {
     public GameObject balle;
+    GameObject nouvelleBalle;
     public float vitesse;
     public Camera cameraJoueur;
 
     float minX, maxX;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (IsServer && GameManager.Instance != null)
+        {
+            GameManager.Instance.EnregistrerJoueur(OwnerClientId, gameObject);
+        }
+    }
+
     void Start()
     {
         if (!IsOwner) return;
 
-        // Abonnement au début de partie
-        GameManager.Instance.OnDebutPartie += SpawnBalle;
+        GameManager.Instance.EnregistrerJoueur(OwnerClientId, gameObject);
 
         if (OwnerClientId == 0)
         {
@@ -49,21 +59,5 @@ public class ControlerBarre : NetworkBehaviour
         // Verifier les limites
         nouvellePosition.x = Mathf.Clamp(nouvellePosition.x, minX, maxX);
         transform.position = nouvellePosition;
-    }
-
-    protected new void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnDebutPartie -= SpawnBalle;
-        }
-            
-        base.OnDestroy();
-    }
-
-    void SpawnBalle()
-    {
-        GameObject nouvelleBalle = Instantiate(balle, transform.position + Vector3.up * 1.5f, Quaternion.identity);
-        nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
     }
 }
