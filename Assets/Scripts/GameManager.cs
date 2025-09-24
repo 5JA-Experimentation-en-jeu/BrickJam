@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class GameManager : NetworkBehaviour
 {
@@ -67,22 +68,65 @@ public class GameManager : NetworkBehaviour
 
         if (joueursConnectes.Count == 2)
         {
-            DebuterPartie();
+            StartCoroutine(CompteAReboursDebutPartie());
         }
     }
 
-    void DebuterPartie()
+    IEnumerator CompteAReboursDebutPartie()
     {
+        yield return new WaitForSeconds(0.5f);
+
+        // Afficher le compte à rebours
+        AfficherTexteClientRpc("3");
+        yield return new WaitForSeconds(1f);
+        AfficherTexteClientRpc("2");
+        yield return new WaitForSeconds(1f);
+        AfficherTexteClientRpc("1");
+        yield return new WaitForSeconds(1f);
+        AfficherTexteClientRpc("GO!");
+
+        CacherTexteClientRpc();
+
         OnDebutPartie?.Invoke();
 
         foreach (var client in joueursConnectes)
         {
             ulong clientId = client.Key;
 
-            Vector3 positionSpawn = client.Value.transform.position + Vector3.up * 8f;
-            GameObject nouvelleBarre = Instantiate(balle, positionSpawn, Quaternion.identity);
-            nouvelleBarre.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+            var controleur = client.Value.GetComponent<ControlerBarre>();
+            Vector3 positionSpawn = controleur.pointLancementBalle.position;
+            GameObject nouvelleBalle = Instantiate(balle, positionSpawn, Quaternion.identity);
+            nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+
+            Debug.Log($"Spawn balle pour client {clientId} à position {positionSpawn}");
+
+            nouvelleBalle.GetComponent<Balle>().LancerViaServerRpc();
         }
+    }
+
+    [ClientRpc]
+    void AfficherTexteClientRpc(string message)
+    {
+        CompteARebours.Instance.AfficherTexte(message);
+    }
+
+    [ClientRpc]
+    void CacherTexteClientRpc()
+    {
+        CompteARebours.Instance.CacherTexte();
+    }
+
+    public Camera ObtenirCameraJoueur(ulong clientId)
+    {
+        if (clientId == 0)
+        {
+            return GameObject.Find("CameraJ1").GetComponent<Camera>();
+        }
+        else if (clientId == 1)
+        {
+            return GameObject.Find("CameraJ2").GetComponent<Camera>();
+        }
+        return null;
     }
 
     // Fonctions appelées par les boutons du menu

@@ -6,8 +6,8 @@ public class ControlerBarre : NetworkBehaviour
 {
     public GameObject balle;
     GameObject nouvelleBalle;
+    public Transform pointLancementBalle;
     public float vitesse;
-    public Camera cameraJoueur;
 
     float minX, maxX;
 
@@ -27,15 +27,7 @@ public class ControlerBarre : NetworkBehaviour
 
         GameManager.Instance.EnregistrerJoueur(OwnerClientId, gameObject);
 
-        if (OwnerClientId == 0)
-        {
-            cameraJoueur = GameObject.Find("CameraJ1").GetComponent<Camera>();
-        }
-        else if (OwnerClientId == 1)
-        {
-            cameraJoueur = GameObject.Find("CameraJ2").GetComponent<Camera>();
-        }
-
+        Camera cameraJoueur = GameManager.Instance.ObtenirCameraJoueur(OwnerClientId);
         // Récupérer les limites de l'écran pour ce joueur
         var limites = cameraJoueur.GetComponent<LimitesEcranJoueur>();
 
