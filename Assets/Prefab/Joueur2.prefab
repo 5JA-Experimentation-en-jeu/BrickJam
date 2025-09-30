@@ -170,7 +170,6 @@ MonoBehaviour:
   balle: {fileID: 5079138480060303256, guid: c1a4764607c3f4ac2af39ee65c72281a, type: 3}
   pointLancementBalle: {fileID: 5928576636601987889}
   vitesse: 10
-  cameraJoueur: {fileID: 0}
 --- !u!1 &3542683114187780654
 GameObject:
   m_ObjectHideFlags: 0

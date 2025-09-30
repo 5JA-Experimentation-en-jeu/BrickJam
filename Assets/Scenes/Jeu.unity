@@ -1187,6 +1187,7 @@ MonoBehaviour:
   Joueur1: {fileID: 654885332135190495, guid: 321a1e36d01aa49e0b5a1cac14430a8c, type: 3}
   Joueur2: {fileID: 654885332135190495, guid: ada8dcc077c694416b762e9c978f0849, type: 3}
   balle: {fileID: 5079138480060303256, guid: c1a4764607c3f4ac2af39ee65c72281a, type: 3}
+  briquesManager: {fileID: 1426496981}
 --- !u!1 &990236428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,6 +1628,83 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1426496981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1426496984}
+  - component: {fileID: 1426496982}
+  - component: {fileID: 1426496983}
+  m_Layer: 0
+  m_Name: BriquesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1426496982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426496981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1690972689
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1426496983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426496981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80325c76d92c44bafac51c5c37d202f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Briques
+  ShowTopMostFoldoutHeaderGroup: 1
+  brique: {fileID: 8388898038350866, guid: 94ec7f4edbe8041bca96fc011e0f2e01, type: 3}
+  rangee: 5
+  colonne: 8
+  espaceBriques: 0.1
+  couleurBriqueJ1: {r: 1, g: 0, b: 0, a: 1}
+  couleurBriqueJ2: {r: 0, g: 0, b: 1, a: 1}
+--- !u!4 &1426496984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426496981}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.61244, y: -1.09773, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2118,5 +2196,6 @@ SceneRoots:
   - {fileID: 1730352568}
   - {fileID: 1395343399}
   - {fileID: 973837953}
+  - {fileID: 1426496984}
   - {fileID: 962503159}
   - {fileID: 900520120}

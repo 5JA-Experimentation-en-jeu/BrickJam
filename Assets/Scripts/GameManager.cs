@@ -13,7 +13,13 @@ public class GameManager : NetworkBehaviour
     public GameObject Joueur2;
     public GameObject balle;
 
+    public GameObject briquesManager;
+
+    GenereBriques briques;
+
     public Action OnDebutPartie;
+
+    bool partieLancee = false;
 
     // Suivi des joueurs connectés
     Dictionary<ulong, GameObject> joueursConnectes = new();
@@ -59,6 +65,28 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    void GenererToutesLesBriques()
+    {
+        briques = briquesManager.GetComponent<GenereBriques>();
+
+        foreach (var client in joueursConnectes)
+        {
+            ulong clientId = client.Key;
+            Camera cam = ObtenirCameraJoueur(clientId);
+
+            if (cam == null) continue;
+
+            float distanceZ = Mathf.Abs(cam.transform.position.z);
+            
+            Vector3 gauche = cam.ViewportToWorldPoint(new Vector3(0, 0.5f, distanceZ));
+            Vector3 droite = cam.ViewportToWorldPoint(new Vector3(1, 0.5f, distanceZ));
+            Vector3 haut = cam.ViewportToWorldPoint(new Vector3(0.5f, 1, distanceZ));
+
+            briques.GenererBriques(clientId, gauche, droite, haut);
+        }
+    }
+
+
     public void EnregistrerJoueur(ulong clientId, GameObject joueur)
     {
         if (!joueursConnectes.ContainsKey(clientId))
@@ -66,8 +94,9 @@ public class GameManager : NetworkBehaviour
             joueursConnectes.Add(clientId, joueur);
         }
 
-        if (joueursConnectes.Count == 2)
+        if (!partieLancee && joueursConnectes.Count == 2)
         {
+            partieLancee = true;
             StartCoroutine(CompteAReboursDebutPartie());
         }
     }
@@ -89,6 +118,8 @@ public class GameManager : NetworkBehaviour
 
         OnDebutPartie?.Invoke();
 
+        GenererToutesLesBriques();
+
         foreach (var client in joueursConnectes)
         {
             ulong clientId = client.Key;
@@ -96,10 +127,8 @@ public class GameManager : NetworkBehaviour
             var controleur = client.Value.GetComponent<ControlerBarre>();
             Vector3 positionSpawn = controleur.pointLancementBalle.position;
             GameObject nouvelleBalle = Instantiate(balle, positionSpawn, Quaternion.identity);
+
             nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
-
-            Debug.Log($"Spawn balle pour client {clientId} à position {positionSpawn}");
-
             nouvelleBalle.GetComponent<Balle>().LancerViaServerRpc();
         }
     }

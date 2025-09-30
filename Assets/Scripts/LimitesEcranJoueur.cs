@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class LimitesEcranJoueur : MonoBehaviour
@@ -17,7 +18,6 @@ public class LimitesEcranJoueur : MonoBehaviour
 
         minX = gauche.x + demiLargeurObjet;
         maxX = droite.x - demiLargeurObjet;
-
         minY = bas.y + demiHauteurObjet;
         maxY = haut.y - demiHauteurObjet;
     }

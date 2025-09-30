@@ -32,12 +32,12 @@ public class Balle : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void LancerViaServerRpc()
     {
-        if (!IsServer) return;
+        if (!IsServer || lancee) return;
+
+        lancee = true;
 
         Vector2 directionRandom = new Vector2(Random.Range(-1f, 1f), 1f).normalized;
         rb.AddForce(directionRandom * forceLance, ForceMode2D.Impulse);
-
-        lancee = true;
     }
 
     void Update()
@@ -59,4 +59,15 @@ public class Balle : NetworkBehaviour
             NetworkObject.Despawn();
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!IsServer) return;
+
+        BriqueNetwork brique = collision.gameObject.GetComponent<BriqueNetwork>();
+        if (brique != null)
+        {
+            collision.gameObject.GetComponent<NetworkObject>().Despawn();
+        }
+  }
 }
