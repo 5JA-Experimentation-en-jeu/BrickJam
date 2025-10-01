@@ -2551,7 +2551,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Allo
+  m_text: BrickJam
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f2cd87b7ec1314d56bb1cb0f39776e1b, type: 2}
   m_sharedMaterial: {fileID: 677205243232905995, guid: f2cd87b7ec1314d56bb1cb0f39776e1b, type: 2}
