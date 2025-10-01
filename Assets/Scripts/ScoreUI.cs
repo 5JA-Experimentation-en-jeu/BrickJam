@@ -9,6 +9,7 @@ public class ScoreUI : MonoBehaviour
 
     void Start()
     {
+        if (texteScore == null) return;
         StartCoroutine(AttendreJoueur());
     }
 
@@ -19,14 +20,21 @@ public class ScoreUI : MonoBehaviour
             yield return null;
         }
 
-        var joueur = GameManager.Instance.joueursConnectes[joueurId];
-        var scoreManager = joueur.GetComponent<ScoreManager>();
+        GameObject joueur = GameManager.Instance.joueursConnectes[joueurId];
+
+        ScoreManager scoreManager = null;
+
+        while (scoreManager == null)
+        {
+            scoreManager = joueur.GetComponent<ScoreManager>();
+            yield return null;
+        }
+
+        texteScore.text = "Score : " + scoreManager.Score.Value;
 
         scoreManager.Score.OnValueChanged += (ancien, nouveau) =>
         {
             texteScore.text = "Score : " + nouveau;
         };
-
-        texteScore.text = "Score : " + scoreManager.Score.Value;
     }
 }

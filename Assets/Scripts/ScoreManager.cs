@@ -9,7 +9,7 @@ public class ScoreManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            Score.Value += 1;
+            Score.Value++;
         }
     }
 }

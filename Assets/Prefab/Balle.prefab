@@ -292,4 +292,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Balle
   ShowTopMostFoldoutHeaderGroup: 1
-  forceLance: 2
+  forceLance: 1.5

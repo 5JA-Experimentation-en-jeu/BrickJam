@@ -1,3 +1,5 @@
+using System.Collections;
+using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,33 +10,42 @@ public class Balle : NetworkBehaviour
     Rigidbody2D rb;
     float minY;
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
 
-    void Start()
-    {
+        // Calculer les limites selon la caméra du joueur
         Camera cameraJoueur = GameManager.Instance.ObtenirCameraJoueur(OwnerClientId);
-
         var limites = cameraJoueur.GetComponent<LimitesEcranJoueur>();
 
         float demiRayon = GetComponent<CircleCollider2D>().radius * transform.lossyScale.x;
-
         limites.CalculerLimites(demiRayon, demiRayon);
         minY = limites.minY;
+
+        if (IsOwner)
+        {
+            Invoke(nameof(DemarrerLancement), 2f);
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
     }
 
+    void DemarrerLancement()
+    {
+        LancerViaServerRpc();
+    }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc (RequireOwnership = false)]
     public void LancerViaServerRpc()
     {
-        if (!IsServer || lancee) return;
+        if (lancee) return;
 
         lancee = true;
-
-        Vector2 directionRandom = new Vector2(UnityEngine.Random.Range(-1f, 1f), 1f).normalized;
-        rb.AddForce(directionRandom * forceLance, ForceMode2D.Impulse);
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        Vector2 directionLance = new Vector2(Random.Range(-1f, 1f), 1).normalized;
+        rb.AddForce(directionLance * forceLance, ForceMode2D.Impulse);
     }
 
     void Update()
@@ -44,27 +55,45 @@ public class Balle : NetworkBehaviour
         // Si la balle sort par le bas de l'écran, la désactiver
         if (transform.position.y <= minY)
         {
-            DespawnBalleServerRpc();
+            PointAdversaire();
+        }
+    }
+
+    void PointAdversaire()
+    {
+        // Donner un point à l'adversaire
+        GameManager.Instance.AjouterPointAdversaire(OwnerClientId);
+
+        StartCoroutine(AttendreRespawn());
+    }
+
+    IEnumerator AttendreRespawn()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (IsServer)
+        {
+            GameManager.Instance.RespawnBalle(OwnerClientId);
+            NetworkObject.Despawn();
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void DespawnBalleServerRpc()
+    void RespawnBalleServerRpc(ulong clientId)
     {
-        if (IsServer && NetworkObject != null)
-        {
-            NetworkObject.Despawn();
-        }
+        GameManager.Instance.RespawnBalle(clientId);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (!IsServer) return;
 
-        BriqueNetwork brique = collision.gameObject.GetComponent<BriqueNetwork>();
+        var brique = collision.gameObject.GetComponent<BriqueNetwork>();
         if (brique != null)
         {
             collision.gameObject.GetComponent<NetworkObject>().Despawn();
+            // Ajouter un point au joueur qui possède la brique
+            GameManager.Instance.AjouterPointPourClient(brique.proprietaireClientId);
         }
   }
 }

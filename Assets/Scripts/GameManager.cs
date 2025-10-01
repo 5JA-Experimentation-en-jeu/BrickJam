@@ -122,14 +122,7 @@ public class GameManager : NetworkBehaviour
 
         foreach (var client in joueursConnectes)
         {
-            ulong clientId = client.Key;
-
-            var controleur = client.Value.GetComponent<ControlerBarre>();
-            Vector3 positionSpawn = controleur.pointLancementBalle.position;
-            GameObject nouvelleBalle = Instantiate(balle, positionSpawn, Quaternion.identity);
-
-            nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
-            nouvelleBalle.GetComponent<Balle>().LancerViaServerRpc();
+            RespawnBalle(client.Key);
         }
     }
 
@@ -170,6 +163,26 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    public void AjouterPointAdversaire(ulong perdantId)
+    {
+        // Le clientId des joueurs est 0 ou 1
+        ulong gagnantId = perdantId == 0 ? 1UL : 0UL;
+        AjouterPointPourClient(gagnantId);
+    }
+
+
+    public void RespawnBalle(ulong clientId)
+    {
+        if (joueursConnectes.TryGetValue(clientId, out var joueur))
+        {
+            var controleur = joueur.GetComponent<ControlerBarre>();
+            Vector3 positionSpawn = controleur.pointLancementBalle.position;
+            GameObject nouvelleBalle = Instantiate(balle, positionSpawn, Quaternion.identity);
+
+            nouvelleBalle.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+            nouvelleBalle.GetComponent<Balle>().LancerViaServerRpc();
+        }
+    }
 
     // Fonctions appelées par les boutons du menu
     public void LancerHote()
