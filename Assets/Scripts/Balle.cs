@@ -6,7 +6,7 @@ public class Balle : NetworkBehaviour
     public float forceLance;
     bool lancee = false;
     Rigidbody2D rb;
-    float minX, maxX, minY, maxY;
+    float minY;
 
     void Awake()
     {
@@ -22,10 +22,7 @@ public class Balle : NetworkBehaviour
         float demiRayon = GetComponent<CircleCollider2D>().radius * transform.lossyScale.x;
 
         limites.CalculerLimites(demiRayon, demiRayon);
-        minX = limites.minX;
-        maxX = limites.maxX;
         minY = limites.minY;
-        maxY = limites.maxY;
     }
 
 
@@ -36,7 +33,7 @@ public class Balle : NetworkBehaviour
 
         lancee = true;
 
-        Vector2 directionRandom = new Vector2(Random.Range(-1f, 1f), 1f).normalized;
+        Vector2 directionRandom = new Vector2(UnityEngine.Random.Range(-1f, 1f), 1f).normalized;
         rb.AddForce(directionRandom * forceLance, ForceMode2D.Impulse);
     }
 

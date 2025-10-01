@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8530659551038640781}
   - component: {fileID: 4583017432472618881}
   - component: {fileID: -7613497149900846172}
+  - component: {fileID: 8662190678811840721}
   m_Layer: 0
   m_Name: Joueur2
   m_TagString: Untagged
@@ -170,6 +171,18 @@ MonoBehaviour:
   balle: {fileID: 5079138480060303256, guid: c1a4764607c3f4ac2af39ee65c72281a, type: 3}
   pointLancementBalle: {fileID: 5928576636601987889}
   vitesse: 10
+--- !u!114 &8662190678811840721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654885332135190495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76133e68884294d16aaab5c2c4a19eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
 --- !u!1 &3542683114187780654
 GameObject:
   m_ObjectHideFlags: 0

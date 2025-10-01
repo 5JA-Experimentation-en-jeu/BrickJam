@@ -22,7 +22,7 @@ public class GameManager : NetworkBehaviour
     bool partieLancee = false;
 
     // Suivi des joueurs connectés
-    Dictionary<ulong, GameObject> joueursConnectes = new();
+    public Dictionary<ulong, GameObject> joueursConnectes = new();
 
     void Awake()
     {
@@ -157,6 +157,19 @@ public class GameManager : NetworkBehaviour
         }
         return null;
     }
+
+    public void AjouterPointPourClient(ulong clientId)
+    {
+        if (joueursConnectes.TryGetValue(clientId, out var joueur))
+        {
+            var scoreManager = joueur.GetComponent<ScoreManager>();
+            if (scoreManager != null)
+            {
+                scoreManager.AjouterPoint(); // Appelle la méthode serveur
+            }
+        }
+    }
+
 
     // Fonctions appelées par les boutons du menu
     public void LancerHote()
